@@ -1,0 +1,7 @@
+{
+  "name": "kyrrefarm",
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm ci --prefix api && npm build api"
+  }
+}
