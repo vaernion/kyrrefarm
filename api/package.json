@@ -21,7 +21,8 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.7",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1"
   },
   "scripts": {
     "build": "tsc",

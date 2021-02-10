@@ -31,7 +31,7 @@ router.get("/reports/:company", async (req, res) => {
     if (report) {
       res.status(200).send(report);
     } else {
-      res.status(404).send();
+      res.status(404).send(`${company} not found`);
     }
   } catch (err) {
     console.log(`router /reports/:company catch: ${err}`);

@@ -5,7 +5,7 @@ const reportsPath = "http://dcsg2003.skyhigh.iik.ntnu.no:9001";
 const reportPrefix = "imt3003_report_last_100_";
 
 class ReportService {
-  #reportsCache: CompanyReport[] = [];
+  #reportsCache: { [key: string]: CompanyReport } = {};
   #reportsFetchedDate: Date | null = null;
   #reportsCacheMinutes: number = 5;
   #companiesCache: string[] = [];
@@ -47,7 +47,7 @@ class ReportService {
     ) {
       if (this.#companiesCache.length === 0) {
         console.info(
-          `${new Date().toJSON()} ReportService.getAllReports() companies cache miss, waiting`
+          `${new Date().toJSON()} ReportService.getAllReports() empty companies cache`
         );
         await this.getCompanies();
       }
@@ -59,10 +59,14 @@ class ReportService {
 
       // slice away trailing comma for valid JSON syntax (comma + newline)
       let reportsJson = "[" + output.stdout.slice(0, -2) + "]";
-      let reports: CompanyReport[] = JSON.parse(reportsJson);
+      let reportsArray: CompanyReport[] = JSON.parse(reportsJson);
+      let reportsObj: { [key: string]: CompanyReport } = reportsArray.reduce(
+        (acc, cur) => ({ ...acc, [cur.account.company]: cur }),
+        {}
+      );
 
       this.#reportsFetchedDate = new Date();
-      this.#reportsCache = reports;
+      this.#reportsCache = reportsObj;
       console.info(
         `${new Date().toJSON()} ReportService.getAllReports() cache miss`
       );
@@ -92,7 +96,10 @@ class ReportService {
         `${new Date().toJSON()} ReportService.getReports() cache hit`
       );
     }
-    return this.#reportsCache.find((e) => e.account.company === companyName);
+    // return this.#reportsCache.find((e) => e.account.company === companyName);
+    return this.#reportsCache.hasOwnProperty(companyName)
+      ? this.#reportsCache[companyName]
+      : null;
   }
 }
 
