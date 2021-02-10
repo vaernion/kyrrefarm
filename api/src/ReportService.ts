@@ -59,9 +59,11 @@ class ReportService {
 
       // slice away trailing comma for valid JSON syntax (comma + newline)
       let reportsJson = "[" + output.stdout.slice(0, -2) + "]";
+      // parse to ensure valid syntax
       let reportsArray: CompanyReport[] = JSON.parse(reportsJson);
+      // convert to a companyName->obj dictionary for easier lookups
       let reportsObj: { [key: string]: CompanyReport } = reportsArray.reduce(
-        (acc, cur) => ({ ...acc, [cur.account.company]: cur }),
+        (acc, cur) => ({ ...acc, [cur.account.user]: cur }),
         {}
       );
 
@@ -96,7 +98,6 @@ class ReportService {
         `${new Date().toJSON()} ReportService.getReports() cache hit`
       );
     }
-    // return this.#reportsCache.find((e) => e.account.company === companyName);
     return this.#reportsCache.hasOwnProperty(companyName)
       ? this.#reportsCache[companyName]
       : null;
