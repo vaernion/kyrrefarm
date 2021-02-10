@@ -4,11 +4,25 @@ REST API that retrieves text files inside a private network.
 
 React frontend to view stats from certain reports retrieved using the server.
 
+## Todo
+
+- [ ] web
+  - [ ] KC health: annualized inflation rate (reduce reports income & expenses)
+  - [ ] per site overview
+  - [ ] graphs
+  - [ ] summary of all companies
+  - [ ] localstorage favorite company
+- [ ] api
+  - [x] routes
+  - [x] caching
+  - [x] ssh & curl
+  - [ ] HATEOAS
+
 ## Config
 
-### Server .env
+### Server env
 
-- SSH_PATH
+- SSH_HOST
 - SSH_USER
 - SSH_KEY
 
@@ -19,7 +33,7 @@ React frontend to view stats from certain reports retrieved using the server.
 ```sh
 cd server
 npm i
-npm build
+npm run build
 ```
 
 ### Client
@@ -27,12 +41,12 @@ npm build
 ```sh
 cd client
 npm i
-npm build
+npm run build
 ```
 
 ## Dev
 
-### Server
+### Dev Server
 
 ```sh
 cd server
@@ -40,7 +54,7 @@ npm i
 npm start
 ```
 
-### Client
+### Dev Client
 
 ```sh
 cd client

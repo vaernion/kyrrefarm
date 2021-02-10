@@ -1,11 +1,11 @@
 import { sshExec } from "./sshExec";
-import { CompanyReport } from "./types";
+import { CompanyReport, CompanyReportDictionary } from "./types";
 
 const reportsPath = "http://dcsg2003.skyhigh.iik.ntnu.no:9001";
 const reportPrefix = "imt3003_report_last_100_";
 
 class ReportService {
-  #reportsCache: { [key: string]: CompanyReport } = {};
+  #reportsCache: CompanyReportDictionary = {};
   #reportsFetchedDate: Date | null = null;
   #reportsCacheMinutes: number = 5;
   #companiesCache: string[] = [];

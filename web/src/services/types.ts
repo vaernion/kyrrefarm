@@ -14,7 +14,7 @@ export type CompanyReport = {
   reports: (WebcheckReport | ClerkReport)[];
 };
 
-type WebcheckReport = { type: "webcheck" } & {
+export type WebcheckReport = { type: "webcheck" } & {
   [K in
     | "check_time"
     | "page_up"
@@ -27,7 +27,7 @@ type WebcheckReport = { type: "webcheck" } & {
     | "result"]: string;
 };
 
-type ClerkReport = {
+export type ClerkReport = {
   type: "clerk";
   vm_count: {
     [K in

@@ -1,8 +1,9 @@
 import { Client } from "ssh2";
 
-const sshKey = process.env.SSH_KEY;
+const sshHost = process.env.SSH_HOST;
+const sshPort = 22;
 const sshUser = process.env.SSH_USER;
-const sshPath = process.env.SSH_PATH;
+const sshKey = process.env.SSH_KEY;
 
 export function sshExec(command: string) {
   return new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
@@ -11,10 +12,10 @@ export function sshExec(command: string) {
       .on("ready", () => {
         conn.exec(command, (err, stream) => {
           if (err) {
-            console.error(`sshRequest() conn.exec() error: ${err}`);
+            console.error(`sshRequest() conn.exec() ${err}`);
             return reject(err);
           }
-          let output = {
+          const output = {
             stdout: "",
             stderr: "",
           };
@@ -36,9 +37,13 @@ export function sshExec(command: string) {
             });
         });
       })
+      .on("error", (err) => {
+        console.error(`sshRequest() conn() ${err}`);
+        return reject(err);
+      })
       .connect({
-        host: sshPath,
-        port: 22,
+        host: sshHost,
+        port: sshPort,
         username: sshUser,
         privateKey: sshKey,
       });
