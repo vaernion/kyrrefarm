@@ -8,10 +8,10 @@ React frontend to view stats from certain reports retrieved using the server.
 
 - [ ] web
   - [ ] KC health: annualized inflation rate (reduce reports income & expenses)
-  - [ ] per site overview
+  - [x] per site overview
   - [ ] graphs
-  - [ ] summary of all companies
-  - [ ] localstorage favorite company
+  - [x] summary of all companies
+  - [x] localstorage favorite company
 - [ ] api
   - [x] routes
   - [x] caching
