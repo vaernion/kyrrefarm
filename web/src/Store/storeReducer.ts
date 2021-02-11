@@ -13,5 +13,7 @@ export const storeReducer = (state: StoreState, action: StoreAction) => {
       return { ...state, companies: action.payload };
     case Actions.SET_REPORTS:
       return { ...state, reports: action.payload };
+    case Actions.ERROR_FOUND:
+      return { ...state, errors: [...state.errors, action.payload] };
   }
 };

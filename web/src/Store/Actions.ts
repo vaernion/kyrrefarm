@@ -1,4 +1,5 @@
 import { CompanyReportDictionary } from "../services/types";
+import { ErrorWithDate } from "./StoreState";
 
 export enum Actions {
   LOADING_BEGIN = "LOADING_BEGIN",
@@ -6,6 +7,7 @@ export enum Actions {
   SET_FAVORITE_COMPANY = "SET_FAVORITE_COMPANY",
   SET_COMPANIES = "SET_COMPANIES",
   SET_REPORTS = "SET_REPORTS",
+  ERROR_FOUND = "ERROR_FOUND",
 }
 
 type ToggleLoading = {
@@ -27,8 +29,14 @@ type SetReports = {
   payload: CompanyReportDictionary;
 };
 
+type ErrorFound = {
+  type: Actions.ERROR_FOUND;
+  payload: ErrorWithDate;
+};
+
 export type StoreAction =
   | ToggleLoading
   | SetFavoriteCompany
   | SetCompanies
-  | SetReports;
+  | SetReports
+  | ErrorFound;

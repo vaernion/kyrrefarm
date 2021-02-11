@@ -22,12 +22,19 @@ export function Store({ children }: { children: React.ReactNode }) {
     if (!isRequestingUpdate) return;
 
     async function fetchData() {
-      dispatch({ type: Actions.LOADING_BEGIN });
-      let companies = await reportServiceClient.getCompanies();
-      let reports = await reportServiceClient.getAllReports();
-      dispatch({ type: Actions.SET_COMPANIES, payload: companies });
-      dispatch({ type: Actions.SET_REPORTS, payload: reports });
-      dispatch({ type: Actions.LOADING_END });
+      try {
+        dispatch({ type: Actions.LOADING_BEGIN });
+        let companies = await reportServiceClient.getCompanies();
+        let reports = await reportServiceClient.getAllReports();
+        dispatch({ type: Actions.SET_COMPANIES, payload: companies });
+        dispatch({ type: Actions.SET_REPORTS, payload: reports });
+        dispatch({ type: Actions.LOADING_END });
+      } catch (err) {
+        dispatch({
+          type: Actions.ERROR_FOUND,
+          payload: { error: err, date: new Date() },
+        });
+      }
     }
 
     fetchData();

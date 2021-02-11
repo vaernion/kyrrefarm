@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import {
   CompanyInfo,
   CompanyList,
+  ErrorsWrapper,
   KyrrecoinFacts,
   LoadingWrapper,
   Menu,
@@ -46,7 +47,9 @@ export function App() {
         <Switch>
           {appRoutes.map((route) => (
             <Route key={route.path} path={route.path} exact={true}>
-              <LoadingWrapper>{route.component}</LoadingWrapper>
+              <ErrorsWrapper>
+                <LoadingWrapper>{route.component}</LoadingWrapper>
+              </ErrorsWrapper>
             </Route>
           ))}
         </Switch>
