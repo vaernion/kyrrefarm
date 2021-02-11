@@ -136,8 +136,8 @@ export function CompanyInfo({
               {Object.entries(clerks[0].vm_count)
                 .filter((e) => Number(e[1]) > 0)
                 .sort((a, b) => a[0].localeCompare(b[0]))
-                .map((e) => (
-                  <Tr>
+                .map((e, i) => (
+                  <Tr key={i}>
                     <Td>{e[0]}</Td>
                     <Td>{e[1]}</Td>
                   </Tr>
