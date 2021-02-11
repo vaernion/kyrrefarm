@@ -10,7 +10,6 @@ const app = express();
 const apiVersion = "/api/v1";
 const whitelist = [
   "https://kyrrefarm.netlify.app",
-  "https://master--kyrrefarm.netlify.app",
   "https://kyrrefarm.herokuapp.com",
   "http://localhost:3000",
 ];
@@ -20,8 +19,12 @@ app.use(
   cors({
     origin: (origin, callback) => {
       console.log("CORS origin:", origin);
-      // allow undefined origin (non-browser)
-      if (!origin || whitelist.includes(origin)) {
+      // allow undefined origin (non-browser), whitelist, and netlify's screenshot service
+      if (
+        !origin ||
+        whitelist.includes(origin) ||
+        origin.includes("kyrrefarm.netlify.app")
+      ) {
         callback(null, true);
       } else {
         // callback(new Error("Not allowed by CORS"));
