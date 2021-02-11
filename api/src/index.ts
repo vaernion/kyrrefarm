@@ -10,6 +10,7 @@ const app = express();
 const apiVersion = "/api/v1";
 const whitelist = [
   "https://kyrrefarm.netlify.app",
+  "https://master--kyrrefarm.netlify.app",
   "https://kyrrefarm.herokuapp.com",
   "http://localhost:3000",
 ];
