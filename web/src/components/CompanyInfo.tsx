@@ -15,8 +15,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useContext } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect } from "react";
+import { useLocation, useParams } from "react-router-dom";
 import { ClerkReport, WebcheckReport } from "../services/types";
 import { StoreContext } from "../Store";
 import { FavoriteCompanyButton, StatBox } from "./";
@@ -29,6 +29,17 @@ export function CompanyInfo({
   const { state } = useContext(StoreContext);
   const { companyName } = useParams<{ companyName: string }>();
   const name = companyNameOverride || companyName;
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname.includes(name)) {
+      if (state.companies.includes(name)) {
+        document.title = `${name} - Companies - Kyrrefarm`;
+      } else {
+        document.title = `[404 error] - Companies - Kyrrefarm`;
+      }
+    }
+  }, [location.pathname, name, state.companies]);
 
   if (!state.companies.includes(name)) {
     return <Container>Company {name} does not exist</Container>;

@@ -1,11 +1,15 @@
 import { Flex, HStack, SimpleGrid } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { StoreContext } from "../Store";
 import { FavoriteCompanyButton } from "./";
 
 export function CompanyList() {
   const { state } = useContext(StoreContext);
+
+  useEffect(() => {
+    document.title = "Companies - Kyrrefarm";
+  }, []);
 
   return (
     <Flex justify="center">

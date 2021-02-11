@@ -1,10 +1,14 @@
 import { Box, Flex, Stack, Text } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { StoreContext } from "../Store";
 import { StatBox } from "./StatBox";
 
 export function KyrrecoinFacts() {
   const { state } = useContext(StoreContext);
+
+  useEffect(() => {
+    document.title = "KC Facts - Kyrrefarm";
+  }, []);
 
   const totalCoins = Object.values(state.reports)
     .reduce((acc, cur) => acc + Number(cur.account.balance), 0)

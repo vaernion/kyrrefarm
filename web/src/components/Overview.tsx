@@ -14,7 +14,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { StoreContext } from "../Store";
 import { StoreState } from "../Store/StoreState";
@@ -50,6 +50,10 @@ export function Overview() {
 const OverviewTable = (state: StoreState) => {
   const [sortBy, setSortBy] = useState("name");
   const [sortAsc, setSortAsc] = useState(true);
+
+  useEffect(() => {
+    document.title = "Overview - Kyrrefarm";
+  }, []);
 
   const handleSort = (newSortBy: string) => {
     if (newSortBy === sortBy) {

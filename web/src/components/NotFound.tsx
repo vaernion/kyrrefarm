@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 
 export function NotFound() {
   const location = useLocation();
+
   useEffect(() => {
     document.title = `404: ${location.pathname} - Kyrrefarm`;
   }, [location.pathname]);
