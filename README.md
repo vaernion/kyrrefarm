@@ -1,4 +1,4 @@
-# Kyrrefarm
+# Kyrrefarm [![Netlify Status](https://api.netlify.com/api/v1/badges/b0388d90-bab6-4de4-be1a-6a3b80bd4889/deploy-status)](https://app.netlify.com/sites/kyrrefarm/deploys)
 
 REST API that retrieves text files inside a private network.
 

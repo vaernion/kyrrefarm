@@ -15,7 +15,7 @@ import { useContext } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { StoreContext } from "../Store";
 import { StoreState } from "../Store/StoreState";
-import { CompanyInfo } from "./";
+import { CompanyInfo, FavoriteCompanyButton } from "./";
 
 export function Overview() {
   const { state } = useContext(StoreContext);
@@ -56,6 +56,10 @@ const OverviewTable = (state: StoreState) => (
           <Tr key={i}>
             <Td>
               <Text>
+                <FavoriteCompanyButton
+                  company={company.account.user}
+                  isFavorite={state.favoriteCompany === company.account.user}
+                />
                 <Link
                   as={ReactRouterLink}
                   to={"companies/" + company.account.user}
