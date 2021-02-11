@@ -1,6 +1,9 @@
+import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import {
   Center,
   Container,
+  HStack,
+  IconButton,
   Link,
   SimpleGrid,
   Table,
@@ -11,10 +14,16 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { StoreContext } from "../Store";
 import { StoreState } from "../Store/StoreState";
+import {
+  averageBalance,
+  averageProductionPercent,
+  productionPercent,
+} from "../utils/calcStats";
+import { reportsToSortedArray } from "../utils/reportsToSortedArray";
 import { CompanyInfo, FavoriteCompanyButton } from "./";
 
 export function Overview() {
@@ -38,76 +47,93 @@ export function Overview() {
   );
 }
 
-const OverviewTable = (state: StoreState) => (
-  <Container border="2px" borderRadius="xl">
-    <Center>
-      <Text as="i">Overview</Text>
-    </Center>
-    <Table size="sm">
-      <Thead>
-        <Tr>
-          <Th>Company</Th>
-          <Th isNumeric>Production</Th>
-          <Th isNumeric>Balance</Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {Object.values(state.reports).map((company, i) => (
-          <Tr key={i}>
-            <Td>
-              <Text>
-                <FavoriteCompanyButton
-                  company={company.account.user}
-                  isFavorite={state.favoriteCompany === company.account.user}
-                />
-                <Link
-                  as={ReactRouterLink}
-                  to={"companies/" + company.account.user}
-                >
-                  {company.account.user}
-                </Link>
-              </Text>
-            </Td>
-            <Td isNumeric>
-              {(
-                (Number(company.account.time_up) /
-                  (Number(company.account.time_up) +
-                    Number(company.account.time_maint) +
-                    Number(company.account.time_down))) *
-                100
-              ).toFixed(3)}
-              %
-            </Td>
-            <Td isNumeric>{Number(company.account.balance).toFixed(3)}</Td>
+const OverviewTable = (state: StoreState) => {
+  const [sortBy, setSortBy] = useState("name");
+  const [sortAsc, setSortAsc] = useState(true);
+
+  const handleSort = (newSortBy: string) => {
+    if (newSortBy === sortBy) {
+      setSortAsc((s) => !s);
+    } else {
+      setSortBy(newSortBy);
+    }
+  };
+
+  return (
+    <Container border="2px" borderRadius="xl">
+      <Center>
+        <Text as="i">Overview</Text>
+      </Center>
+      <Table size="xs">
+        <Thead>
+          <Tr>
+            <Th textDecoration={sortBy === "name" ? "underline" : ""}>
+              Company
+              <IconButton
+                aria-label={`Sort by company ${
+                  sortAsc ? "ascending" : "descending"
+                }`}
+                icon={sortAsc ? <ArrowDownIcon /> : <ArrowUpIcon />}
+                onClick={() => handleSort("name")}
+              />
+            </Th>
+
+            <Th textDecoration={sortBy === "prod" ? "underline" : ""}>
+              Up
+              <IconButton
+                aria-label={`Sort by uptime ${
+                  sortAsc ? "ascending" : "descending"
+                }`}
+                icon={sortAsc ? <ArrowDownIcon /> : <ArrowUpIcon />}
+                onClick={() => handleSort("prod")}
+              />
+            </Th>
+
+            <Th textDecoration={sortBy === "kc" ? "underline" : ""} isNumeric>
+              KC
+              <IconButton
+                aria-label={`Sort by KC ${
+                  sortAsc ? "ascending" : "descending"
+                }`}
+                icon={sortAsc ? <ArrowDownIcon /> : <ArrowUpIcon />}
+                onClick={() => handleSort("kc")}
+              />
+            </Th>
           </Tr>
-        ))}
-        <Tr fontWeight="bold">
-          <Td>Average</Td>
-          <Td isNumeric>
-            {(
-              (Object.values(state.reports).reduce((acc, cur) => {
-                let uptime =
-                  Number(cur.account.time_up) /
-                  (Number(cur.account.time_up) +
-                    Number(cur.account.time_maint) +
-                    Number(cur.account.time_down));
-                return acc + Math.max(0, uptime);
-              }, 0) /
-                Object.values(state.reports).length) *
-              100
-            ).toFixed(3)}
-            %
-          </Td>
-          <Td isNumeric>
-            {(
-              Object.values(state.reports).reduce(
-                (acc, cur) => acc + Number(cur.account.balance),
-                0
-              ) / Object.values(state.reports).length
-            ).toFixed(3)}
-          </Td>
-        </Tr>
-      </Tbody>
-    </Table>
-  </Container>
-);
+        </Thead>
+        <Tbody>
+          {reportsToSortedArray(state.reports, sortBy, sortAsc).map(
+            (company, i) => (
+              <Tr key={i}>
+                <Td>
+                  <HStack>
+                    <FavoriteCompanyButton
+                      company={company.account.user}
+                      isFavorite={
+                        state.favoriteCompany === company.account.user
+                      }
+                    />
+                    <Link
+                      as={ReactRouterLink}
+                      to={"companies/" + company.account.user}
+                    >
+                      {company.account.user}
+                    </Link>
+                  </HStack>
+                </Td>
+
+                <Td>{productionPercent(company).toFixed(3)}%</Td>
+                <Td isNumeric>{Number(company.account.balance).toFixed(3)}</Td>
+              </Tr>
+            )
+          )}
+          <Tr fontWeight="bold">
+            <Td>Average</Td>
+            <Td>{averageProductionPercent(state).toFixed(3)}%</Td>
+            <Td isNumeric>{averageBalance(state).toFixed(3)}</Td>
+          </Tr>
+        </Tbody>
+      </Table>
+    </Container>
+  );
+};

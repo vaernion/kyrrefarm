@@ -4,6 +4,7 @@ import {
   Center,
   Container,
   Flex,
+  HStack,
   Stack,
   StatGroup,
   Table,
@@ -46,24 +47,22 @@ export function CompanyInfo({
   return (
     <Flex justify="center">
       <Stack direction="column">
-        <Box>
-          <Text fontWeight="bold">
-            <FavoriteCompanyButton
-              company={name}
-              isFavorite={state.favoriteCompany === name}
-            />
-            {company.account.user}
-            {webchecks[0].page_up === "yes" ? (
-              <Badge ml={1} colorScheme="green">
-                Up
-              </Badge>
-            ) : (
-              <Badge ml={1} colorScheme="red">
-                Down
-              </Badge>
-            )}
-          </Text>
-        </Box>
+        <HStack>
+          <FavoriteCompanyButton
+            company={name}
+            isFavorite={state.favoriteCompany === name}
+          />
+          <Text fontWeight="bold">{company.account.user}</Text>
+          {webchecks[0].page_up === "yes" ? (
+            <Badge ml={1} colorScheme="green">
+              Up
+            </Badge>
+          ) : (
+            <Badge ml={1} colorScheme="red">
+              Down
+            </Badge>
+          )}
+        </HStack>
 
         <StatBox
           label="Time in production"
