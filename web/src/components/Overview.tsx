@@ -1,6 +1,7 @@
 import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import {
   Badge,
+  Box,
   Center,
   Container,
   HStack,
@@ -32,14 +33,16 @@ export function Overview() {
 
   return (
     <>
-      <SimpleGrid columns={[1, 2, 3, 4]} spacing={3}>
+      <SimpleGrid minChildWidth={["350px", "500px"]} spacing="10px">
         {state.favoriteCompany ? (
-          <Container border="2px" borderRadius="xl">
-            <Center>
-              <Text as="i">Favorite</Text>
-            </Center>
-            <CompanyInfo companyNameOverride={state.favoriteCompany} />
-          </Container>
+          <Box>
+            <Container border="2px" borderRadius="2xl">
+              <Center>
+                <Text as="i">Favorite</Text>
+              </Center>
+              <CompanyInfo companyNameOverride={state.favoriteCompany} />
+            </Container>
+          </Box>
         ) : null}
 
         {OverviewTable(state)}
