@@ -24,7 +24,7 @@ export function Overview() {
     <>
       <SimpleGrid columns={[1, 2, 3, 4]} spacing={3}>
         {state.favoriteCompany ? (
-          <Container ml={3} border="2px" borderRadius="xl">
+          <Container border="2px" borderRadius="xl">
             <Center>
               <Text as="i">Favorite</Text>
             </Center>
@@ -39,7 +39,7 @@ export function Overview() {
 }
 
 const OverviewTable = (state: StoreState) => (
-  <Container ml={3} border="2px" borderRadius="xl">
+  <Container border="2px" borderRadius="xl">
     <Center>
       <Text as="i">Overview</Text>
     </Center>
