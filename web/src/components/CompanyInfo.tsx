@@ -139,7 +139,7 @@ export function CompanyInfo({
             <Thead>
               <Tr>
                 <Th>Flavor</Th>
-                <Th>Count</Th>
+                <Th isNumeric>Count</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -149,9 +149,53 @@ export function CompanyInfo({
                 .map((e, i) => (
                   <Tr key={i}>
                     <Td>{e[0]}</Td>
-                    <Td>{e[1]}</Td>
+                    <Td isNumeric>{e[1]}</Td>
                   </Tr>
                 ))}
+            </Tbody>
+          </Table>
+        </Box>
+
+        <Box>
+          <Center>
+            <Text as="b">Bookface</Text>
+          </Center>
+          <Table>
+            <Tbody>
+              <Tr>
+                <Td>Time to download</Td>
+                <Td isNumeric>
+                  {Number(
+                    webchecks[0].result.includes("Download time longer than")
+                      ? webchecks[0].result
+                          .split(". Download time longer than")[0]
+                          .split("time to download: ")[1]
+                      : webchecks[0].result
+                          .split(". Nunber of frontpage")[0]
+                          .split("time to download: ")[1]
+                  ).toFixed(2)}
+                </Td>
+              </Tr>
+              <Tr>
+                <Td>Frontpage users</Td>
+                <Td isNumeric>
+                  {
+                    webchecks[0].result
+                      .split(". Time since last")[0]
+                      .split("users: ")[1]
+                  }
+                </Td>
+              </Tr>
+              <Tr>
+                <Td>Images found</Td>
+                <Td isNumeric>
+                  {webchecks[0].result.includes("images found")
+                    ? webchecks[0].result
+                        .split(". time to download")[0]
+                        .split("found: ")[1]
+                    : 0}
+                </Td>
+              </Tr>
             </Tbody>
           </Table>
         </Box>

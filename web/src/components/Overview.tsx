@@ -1,5 +1,6 @@
 import { ArrowDownIcon, ArrowUpIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Center,
   Container,
   HStack,
@@ -74,6 +75,7 @@ const OverviewTable = (state: StoreState) => {
             <Th textDecoration={sortBy === "name" ? "underline" : ""}>
               Company
               <IconButton
+                size="sm"
                 aria-label={`Sort by company ${
                   sortAsc ? "ascending" : "descending"
                 }`}
@@ -85,6 +87,7 @@ const OverviewTable = (state: StoreState) => {
             <Th textDecoration={sortBy === "prod" ? "underline" : ""}>
               Up
               <IconButton
+                size="sm"
                 aria-label={`Sort by uptime ${
                   sortAsc ? "ascending" : "descending"
                 }`}
@@ -96,6 +99,7 @@ const OverviewTable = (state: StoreState) => {
             <Th textDecoration={sortBy === "kc" ? "underline" : ""} isNumeric>
               KC
               <IconButton
+                size="sm"
                 aria-label={`Sort by KC ${
                   sortAsc ? "ascending" : "descending"
                 }`}
@@ -107,29 +111,49 @@ const OverviewTable = (state: StoreState) => {
         </Thead>
         <Tbody>
           {reportsToSortedArray(state.reports, sortBy, sortAsc).map(
-            (company, i) => (
-              <Tr key={i}>
-                <Td>
-                  <HStack>
-                    <FavoriteCompanyButton
-                      company={company.account.user}
-                      isFavorite={
-                        state.favoriteCompany === company.account.user
-                      }
-                    />
-                    <Link
-                      as={ReactRouterLink}
-                      to={"companies/" + company.account.user}
-                    >
-                      {company.account.user}
-                    </Link>
-                  </HStack>
-                </Td>
+            (company, i) => {
+              let recentWebcheck = company.reports.find(
+                (e) => e.type === "webcheck"
+              );
+              let recentlyUp =
+                recentWebcheck &&
+                "page_up" in recentWebcheck &&
+                recentWebcheck.page_up === "yes";
+              return (
+                <Tr key={i}>
+                  <Td>
+                    <HStack>
+                      <FavoriteCompanyButton
+                        company={company.account.user}
+                        isFavorite={
+                          state.favoriteCompany === company.account.user
+                        }
+                      />
+                      <Link
+                        as={ReactRouterLink}
+                        to={"companies/" + company.account.user}
+                      >
+                        {company.account.user}
+                      </Link>
+                      {recentlyUp ? (
+                        <Badge ml={1} colorScheme="green">
+                          Up
+                        </Badge>
+                      ) : (
+                        <Badge ml={1} colorScheme="red">
+                          Down
+                        </Badge>
+                      )}
+                    </HStack>
+                  </Td>
 
-                <Td>{productionPercent(company).toFixed(3)}%</Td>
-                <Td isNumeric>{Number(company.account.balance).toFixed(3)}</Td>
-              </Tr>
-            )
+                  <Td>{productionPercent(company).toFixed(3)}%</Td>
+                  <Td isNumeric>
+                    {Number(company.account.balance).toFixed(3)}
+                  </Td>
+                </Tr>
+              );
+            }
           )}
           <Tr fontWeight="bold">
             <Td>Average</Td>
