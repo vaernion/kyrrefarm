@@ -36,12 +36,12 @@ router.get("/", (req, res) => {
   res.status(200).send(apiTree);
 });
 
-router.get("/companies", async (req, res) => {
+router.get("/companynames", async (req, res) => {
   try {
     let formattedOutput = await reportService.getCompanies();
     res.status(200).send(formattedOutput);
   } catch (err) {
-    console.error(`router /companies catch() ${err}`);
+    console.error(`router /companynames catch() ${err}`);
     res.status(500).send({ error: err.message });
   }
 });

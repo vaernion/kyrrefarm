@@ -66,6 +66,6 @@ npm start
 
 | method | endpoint              | description                      |
 | ------ | --------------------- | -------------------------------- |
-| get    | /companies            | get all company names            |
+| get    | /companynames         | get all company names            |
 | get    | /reports              | get all company reports          |
 | get    | /reports/:companyName | get a specific company's reports |
