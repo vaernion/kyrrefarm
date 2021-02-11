@@ -6,6 +6,7 @@ const BACKEND_URL =
   process.env.NODE_ENV === "production"
     ? "https://kyrrefarm.herokuapp.com" + apiVersion
     : "http://localhost:4000" + apiVersion;
+console.info(`BACKEND_URK: ${BACKEND_URL}`);
 
 class ReportServiceClient {
   async getCompanies() {

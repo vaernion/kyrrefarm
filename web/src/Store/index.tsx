@@ -29,8 +29,21 @@ export function Store({ children }: { children: React.ReactNode }) {
       dispatch({ type: Actions.SET_REPORTS, payload: reports });
       dispatch({ type: Actions.LOADING_END });
     }
+
     fetchData();
+    setIsRequestingUpdate(false);
   }, [isRequestingUpdate]);
+
+  // automatically re-fetch every 5 minutes
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIsRequestingUpdate(true);
+    }, 5 * 60 * 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   return (
     <>

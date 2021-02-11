@@ -3,8 +3,9 @@ import { reportService } from "./ReportService";
 
 export const router = express.Router();
 
+// Cache-Control
 router.use((req, res, next) => {
-  const seconds = 60 * 5;
+  const seconds = 5 * 60;
   if (req.method == "GET") {
     res.set("Cache-control", `public, max-age=${seconds}`);
   } else {
