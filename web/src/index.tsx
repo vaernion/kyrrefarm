@@ -10,11 +10,6 @@ const theme = extendTheme({
   useSystemColorMode: true,
   colors: {
     white: "#f9f9fa",
-    lightBg: {
-      100: "#93a5cf",
-      200: "#e4efe9",
-    },
-    darkbg: {},
     primary: {
       100: "#E5FCF1",
       200: "#27EF96",
