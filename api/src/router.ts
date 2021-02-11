@@ -18,7 +18,7 @@ const apiTree = {
   _links: {
     self: { href: "/", methods: ["get"] },
     companyNames: {
-      href: "companies",
+      href: "companynames",
       methods: ["get"],
     },
     allCompanyReports: {
