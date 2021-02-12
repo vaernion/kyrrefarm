@@ -45,15 +45,13 @@ export function App() {
       <Store>
         <Menu />
         <Switch>
-          <ErrorsWrapper>
-            <LoadingWrapper>
-              {appRoutes.map((route) => (
-                <Route key={route.path} path={route.path} exact={true}>
-                  {route.component}
-                </Route>
-              ))}
-            </LoadingWrapper>
-          </ErrorsWrapper>
+          {appRoutes.map((route) => (
+            <Route key={route.path} path={route.path} exact={true}>
+              <ErrorsWrapper>
+                <LoadingWrapper>{route.component}</LoadingWrapper>
+              </ErrorsWrapper>
+            </Route>
+          ))}
         </Switch>
       </Store>
     </Router>
