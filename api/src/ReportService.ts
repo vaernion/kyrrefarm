@@ -7,10 +7,10 @@ const reportPrefix = "imt3003_report_last_100_";
 class ReportService {
   #reportsCache: CompanyReportDictionary = {};
   #reportsFetchedDate: Date | null = null;
-  #reportsCacheMinutes: number = 5;
+  #reportsCacheMinutes: number = 10;
   #companiesCache: string[] = [];
   #companiesFetchedDate: Date | null = null;
-  #companiesCacheMinutes: number = 5;
+  #companiesCacheMinutes: number = 10;
 
   async getCompanies() {
     if (
@@ -24,6 +24,7 @@ class ReportService {
       let output = await sshExec(command);
 
       let companies = output.stdout.split("\n").slice(1, -1).sort();
+
       this.#companiesFetchedDate = new Date();
       this.#companiesCache = companies;
       console.info(
@@ -51,7 +52,6 @@ class ReportService {
         );
         await this.getCompanies();
       }
-
       let command = `for company in ${this.#companiesCache.join(
         " "
       )}; do curl -s ${reportsPath}/${reportPrefix}\${company}.json; echo ','; done`;

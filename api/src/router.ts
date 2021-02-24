@@ -5,12 +5,12 @@ export const router = express.Router();
 
 // Cache-Control
 router.use((req, res, next) => {
-  const seconds = 5 * 60;
-  if (req.method == "GET") {
-    res.set("Cache-control", `public, max-age=${seconds}`);
-  } else {
-    res.set("Cache-control", `no-store`);
-  }
+  // const seconds = 5 * 60;
+  // if (req.method == "GET") {
+  // res.set("Cache-control", `public, max-age=${seconds}`);
+  // } else {
+  res.set("Cache-control", `no-store`);
+  // }
   next();
 });
 
@@ -37,37 +37,67 @@ router.get("/", (req, res) => {
 });
 
 router.get("/companynames", async (req, res) => {
-  try {
-    let formattedOutput = await reportService.getCompanies();
-    res.status(200).send(formattedOutput);
-  } catch (err) {
-    console.error(`router /companynames catch() ${err}`);
-    res.status(500).send({ error: err.message });
+  const maxAttempts = 3;
+  let attempts = 0;
+  while (attempts < maxAttempts) {
+    try {
+      let formattedOutput = await reportService.getCompanies();
+      res.status(200).send(formattedOutput);
+      break;
+    } catch (err) {
+      attempts++;
+      if (attempts < maxAttempts) {
+        continue;
+      } else {
+        console.error(`router /companynames catch() ${err}`);
+        res.status(500).send({ error: err.message });
+      }
+    }
   }
 });
 
 router.get("/reports/", async (req, res) => {
-  try {
-    let allReports = await reportService.getAllReports();
-    res.status(200).send(allReports);
-  } catch (err) {
-    console.error(`router /reports/ catch() ${err}`);
-    res.status(500).send({ error: err.message });
+  const maxAttempts = 3;
+  let attempts = 0;
+  while (attempts < maxAttempts) {
+    try {
+      let allReports = await reportService.getAllReports();
+      res.status(200).send(allReports);
+      break;
+    } catch (err) {
+      attempts++;
+      if (attempts < maxAttempts) {
+        continue;
+      } else {
+        console.error(`router /reports/ catch() ${err}`);
+        res.status(500).send({ error: err.message });
+      }
+    }
   }
 });
 
 router.get("/reports/:company", async (req, res) => {
-  try {
-    let company = req.params.company;
-    let reports = await reportService.getReports(company);
+  const maxAttempts = 3;
+  let attempts = 0;
+  while (attempts < maxAttempts) {
+    try {
+      let company = req.params.company;
+      let reports = await reportService.getReports(company);
 
-    if (reports) {
-      res.status(200).send(reports);
-    } else {
-      res.status(404).send({ error: `Company '${company}' not found` });
+      if (reports) {
+        res.status(200).send(reports);
+      } else {
+        res.status(404).send({ error: `Company '${company}' not found` });
+      }
+      break;
+    } catch (err) {
+      attempts++;
+      if (attempts < maxAttempts) {
+        continue;
+      } else {
+        console.error(`router /reports/:company catch() ${err}`);
+        res.status(500).send({ error: err.message });
+      }
     }
-  } catch (err) {
-    console.error(`router /reports/:company catch() ${err}`);
-    res.status(500).send({ error: err.message });
   }
 });
