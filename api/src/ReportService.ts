@@ -10,7 +10,7 @@ class ReportService {
   #reportsCacheMinutes: number = 10;
   #companiesCache: string[] = [];
   #companiesFetchedDate: Date | null = null;
-  #companiesCacheMinutes: number = 10;
+  #companiesCacheMinutes: number = 60;
 
   async getCompanies() {
     if (
