@@ -163,6 +163,14 @@ export function CompanyInfo({
           <Table>
             <Tbody>
               <Tr>
+                <Td>Bonus</Td>
+                <Td>
+                  {webchecks[0].result.includes("bonus in action")
+                    ? "Yes"
+                    : "No"}
+                </Td>
+              </Tr>
+              <Tr>
                 <Td>Time to download</Td>
                 <Td isNumeric>
                   {Number(
@@ -183,6 +191,7 @@ export function CompanyInfo({
                     webchecks[0].result
                       .split(". Time since last")[0]
                       .split("users: ")[1]
+                      .split(". Download time")[0]
                   }
                 </Td>
               </Tr>
