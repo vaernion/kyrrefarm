@@ -35,8 +35,13 @@ app.use(
   })
 );
 
+const apiHint = { _links: { apiv1: { href: "/api/v1", methods: ["get"] } } };
+
 app.use(express.json());
 app.use(apiVersion, router);
+app.get("/", (req, res) => {
+  res.status(200).send(apiHint);
+});
 
 const PORT: number = Number(process.env.PORT) || 4000;
 app.listen(PORT, () => {

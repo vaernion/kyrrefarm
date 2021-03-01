@@ -1,3 +1,4 @@
+import { companyNames } from "./names";
 import { sshExec } from "./sshExec";
 import { CompanyReport, CompanyReportDictionary } from "./types";
 
@@ -8,17 +9,20 @@ class ReportService {
   #reportsCache: CompanyReportDictionary = {};
   #reportsFetchedDate: Date | null = null;
   #reportsCacheMinutes: number = 10;
-  #companiesCache: string[] = [];
+  #reportsAlwaysUseCache: boolean = false;
+  #companiesCache: string[] = companyNames;
   #companiesFetchedDate: Date | null = null;
   #companiesCacheMinutes: number = 60;
+  #companiesAlwaysUseCache: boolean = true;
 
   async getCompanies() {
     if (
-      !this.#companiesFetchedDate ||
-      Math.abs(new Date().getTime() - this.#companiesFetchedDate.getTime()) /
-        1000 /
-        60 >
-        this.#companiesCacheMinutes
+      !this.#companiesAlwaysUseCache &&
+      (!this.#companiesFetchedDate ||
+        Math.abs(new Date().getTime() - this.#companiesFetchedDate.getTime()) /
+          1000 /
+          60 >
+          this.#companiesCacheMinutes)
     ) {
       let command = `curl -s ${reportsPath}/companies`;
       let output = await sshExec(command);
@@ -40,11 +44,12 @@ class ReportService {
 
   async getAllReports() {
     if (
-      !this.#reportsFetchedDate ||
-      Math.abs(new Date().getTime() - this.#reportsFetchedDate.getTime()) /
-        1000 /
-        60 >
-        this.#reportsCacheMinutes
+      !this.#reportsAlwaysUseCache &&
+      (!this.#reportsFetchedDate ||
+        Math.abs(new Date().getTime() - this.#reportsFetchedDate.getTime()) /
+          1000 /
+          60 >
+          this.#reportsCacheMinutes)
     ) {
       if (this.#companiesCache.length === 0) {
         console.info(
@@ -82,11 +87,12 @@ class ReportService {
 
   async getReports(companyName: string) {
     if (
-      !this.#reportsFetchedDate ||
-      Math.abs(new Date().getTime() - this.#reportsFetchedDate.getTime()) /
-        1000 /
-        60 >
-        this.#reportsCacheMinutes
+      !this.#reportsAlwaysUseCache &&
+      (!this.#reportsFetchedDate ||
+        Math.abs(new Date().getTime() - this.#reportsFetchedDate.getTime()) /
+          1000 /
+          60 >
+          this.#reportsCacheMinutes)
     ) {
       await this.getAllReports();
 
