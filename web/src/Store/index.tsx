@@ -32,7 +32,12 @@ export function Store({ children }: { children: React.ReactNode }) {
       } catch (err) {
         dispatch({
           type: Actions.ERROR_FOUND,
-          payload: { error: err, date: new Date() },
+          payload: {
+            error: err?.response?.data?.error
+              ? new Error(`${err.message} ${err.response.data.error}`)
+              : err,
+            date: new Date(),
+          },
         });
       }
     }

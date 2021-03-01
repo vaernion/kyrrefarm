@@ -9,10 +9,11 @@ export function ErrorsWrapper({ children }: { children: React.ReactNode }) {
     return (
       <Flex justify="center">
         <Stack direction="column">
-          {state.errors.map((error, i) => (
+          {state.errors.map((errorWithDate, i) => (
             <Container key={i}>
               <Text>
-                {error.date.toLocaleString()} {error.error.toString()}
+                {errorWithDate.date.toLocaleString()}{" "}
+                {errorWithDate.error.toString()}
               </Text>
             </Container>
           ))}
