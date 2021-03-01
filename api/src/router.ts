@@ -65,10 +65,6 @@ router.get("/reports/", async (req, res) => {
       res.status(200).send(allReports);
       break;
     } catch (err) {
-      // if (process.env.NODE_ENV === "development" && err.message.includes("in JSON at position")) {
-      //   res.status(500).send({error: err.message})
-      //   break;
-      // }
       attempts++;
       if (attempts < maxAttempts) {
         continue;

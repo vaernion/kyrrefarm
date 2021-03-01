@@ -1,3 +1,4 @@
+import { writeFileSync } from "fs";
 import { companyNames } from "./names";
 import { sshExec } from "./sshExec";
 import { CompanyReport, CompanyReportDictionary } from "./types";
@@ -10,10 +11,13 @@ class ReportService {
   #reportsFetchedDate: Date | null = null;
   #reportsCacheMinutes: number = 10;
   #reportsAlwaysUseCache: boolean = false;
+
   #companiesCache: string[] = companyNames;
   #companiesFetchedDate: Date | null = null;
   #companiesCacheMinutes: number = 60;
   #companiesAlwaysUseCache: boolean = true;
+
+  #reportsArray: CompanyReport[] = [];
 
   async getCompanies() {
     if (
@@ -64,10 +68,36 @@ class ReportService {
 
       // slice away trailing comma for valid JSON syntax (comma + newline)
       let reportsJson = "[" + output.stdout.slice(0, -2) + "]";
-      // parse to ensure valid syntax
-      let reportsArray: CompanyReport[] = JSON.parse(reportsJson);
+
+      // handle invalid syntax in original files
+      try {
+        // parse to ensure valid syntax
+        let reportsArray: CompanyReport[] = JSON.parse(reportsJson);
+        this.#reportsArray = reportsArray;
+      } catch (err) {
+        if (
+          // process.env.NODE_ENV === "development" &&
+          err.message.includes("in JSON at position")
+        ) {
+          let reportsJsonFixed = reportsJson
+            //  fix double comma
+            .split(",\n,")
+            .join(",")
+            // fix hanging comma at start of array
+            .split("[\n,")
+            .join("[");
+          writeFileSync("all-reports-stdout.log", reportsJson);
+          writeFileSync("all-reports-fixed.json", reportsJsonFixed);
+          writeFileSync("all-reports-stderr.log", output.stderr);
+          this.#reportsArray = JSON.parse(reportsJsonFixed);
+        } else {
+          throw err;
+        }
+      }
       // convert to a companyName->obj dictionary for easier lookups
-      let reportsObj: { [key: string]: CompanyReport } = reportsArray.reduce(
+      let reportsObj: {
+        [key: string]: CompanyReport;
+      } = this.#reportsArray.reduce(
         (acc, cur) => ({ ...acc, [cur.account.user]: cur }),
         {}
       );
