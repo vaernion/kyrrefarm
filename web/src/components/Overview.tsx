@@ -64,6 +64,7 @@ const OverviewTable = (state: StoreState) => {
       setSortAsc((s) => !s);
     } else {
       setSortBy(newSortBy);
+      setSortAsc((s) => !s);
     }
   };
 
