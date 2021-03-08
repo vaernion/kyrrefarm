@@ -63,8 +63,12 @@ const OverviewTable = (state: StoreState) => {
     if (newSortBy === sortBy) {
       setSortAsc((s) => !s);
     } else {
+      if (newSortBy === "name") {
+        setSortAsc(true);
+      } else {
+        setSortAsc(false);
+      }
       setSortBy(newSortBy);
-      setSortAsc((s) => !s);
     }
   };
 
