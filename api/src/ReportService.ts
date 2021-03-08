@@ -75,20 +75,26 @@ class ReportService {
         let reportsArray: CompanyReport[] = JSON.parse(reportsJson);
         this.#reportsArray = reportsArray;
       } catch (err) {
-        if (
-          // process.env.NODE_ENV === "development" &&
-          err.message.includes("in JSON at position")
-        ) {
+        if (err.message.includes("in JSON at position")) {
+          console.time("ms to fix json formatting");
           let reportsJsonFixed = reportsJson
             //  fix double comma
             .split(",\n,")
             .join(",")
             // fix hanging comma at start of array
             .split("[\n,")
-            .join("[");
-          writeFileSync("all-reports-stdout.log", reportsJson);
-          writeFileSync("all-reports-fixed.json", reportsJsonFixed);
-          writeFileSync("all-reports-stderr.log", output.stderr);
+            .join("[")
+            // fix trailing comma at end of array
+            .split(",\n]")
+            .join("]");
+          console.timeEnd("ms to fix json formatting");
+
+          if (process.env.NODE_ENV === "development") {
+            writeFileSync("all-reports-stdout.log", reportsJson);
+            writeFileSync("all-reports-fixed.json", reportsJsonFixed);
+            writeFileSync("all-reports-stderr.log", output.stderr);
+          }
+
           this.#reportsArray = JSON.parse(reportsJsonFixed);
         } else {
           throw err;
