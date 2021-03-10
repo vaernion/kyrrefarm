@@ -9,13 +9,13 @@ const reportPrefix = "imt3003_report_last_100_";
 class ReportService {
   #reportsCache: CompanyReportDictionary = {};
   #reportsFetchedDate: Date | null = null;
-  #reportsCacheMinutes: number = 10;
+  #reportsCacheMinutes: number = 5;
   #reportsAlwaysUseCache: boolean = false;
 
   #companiesCache: string[] = companyNames;
   #companiesFetchedDate: Date | null = null;
   #companiesCacheMinutes: number = 60;
-  #companiesAlwaysUseCache: boolean = true;
+  #companiesAlwaysUseCache: boolean = false;
 
   #reportsArray: CompanyReport[] = [];
 
