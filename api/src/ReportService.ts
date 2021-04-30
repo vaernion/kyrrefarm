@@ -4,15 +4,16 @@ import { companyNames } from "./names";
 import { sshExec } from "./sshExec";
 import { CompanyReport, CompanyReportDictionary } from "./types";
 
+const collator = new Intl.Collator(["en", "no"]);
+
 const reportsPath = "http://dcsg2003.skyhigh.iik.ntnu.no:9001";
 const reportPrefix = "imt3003_report_last_100_";
 
 const exampleReports: CompanyReport[] = _exampleReports;
 
-const exampleReportsObj: CompanyReportDictionary = exampleReports.reduce(
-  (acc, cur) => ({ ...acc, [cur.account.user]: cur }),
-  {}
-);
+const exampleReportsObj: CompanyReportDictionary = exampleReports
+  .sort((a, b) => collator.compare(a.account.user, b.account.user))
+  .reduce((acc, cur) => ({ ...acc, [cur.account.user]: cur }), {});
 
 class ReportService {
   #reportsCache: CompanyReportDictionary = {};
