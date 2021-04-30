@@ -26,14 +26,15 @@ export function Store({ children }: { children: React.ReactNode }) {
         dispatch({ type: Actions.LOADING_BEGIN });
         let companies = await reportServiceClient.getCompanies();
         let reports = await reportServiceClient.getAllReports();
-        dispatch({ type: Actions.SET_COMPANIES, payload: companies });
-        dispatch({ type: Actions.SET_REPORTS, payload: reports });
+        dispatch({ type: Actions.SET_COMPANIES, payload: companies.data });
+        dispatch({ type: Actions.SET_REPORTS, payload: reports.data });
+        dispatch({ type: Actions.SET_IS_DEMO, payload: reports.isDemo });
         dispatch({ type: Actions.LOADING_END });
       } catch (err) {
         dispatch({
           type: Actions.ERROR_FOUND,
           payload: {
-            error: err?.response?.data?.error
+            error: err.response?.data?.error
               ? new Error(`${err.message} ${err.response.data.error}`)
               : err,
             date: new Date(),

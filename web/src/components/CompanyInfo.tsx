@@ -79,7 +79,7 @@ export function CompanyInfo({
           label="Time in production"
           number={webchecks[0].time_in_production}
           unit="%"
-          toFixed={3}
+          toFixed={2}
           helpText={webchecks[0].check_time}
           arrow={{
             value: (

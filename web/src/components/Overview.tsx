@@ -155,9 +155,9 @@ const OverviewTable = (state: StoreState) => {
                     </HStack>
                   </Td>
 
-                  <Td>{productionPercent(company).toFixed(3)}%</Td>
+                  <Td>{productionPercent(company).toFixed(2)}%</Td>
                   <Td isNumeric>
-                    {Number(company.account.balance).toFixed(3)}
+                    {Number(company.account.balance).toFixed(2)}
                   </Td>
                 </Tr>
               );
@@ -165,8 +165,8 @@ const OverviewTable = (state: StoreState) => {
           )}
           <Tr fontWeight="bold">
             <Td>Average</Td>
-            <Td>{averageProductionPercent(state).toFixed(3)}%</Td>
-            <Td isNumeric>{averageBalance(state).toFixed(3)}</Td>
+            <Td>{averageProductionPercent(state).toFixed(2)}%</Td>
+            <Td isNumeric>{averageBalance(state).toFixed(2)}</Td>
           </Tr>
         </Tbody>
       </Table>

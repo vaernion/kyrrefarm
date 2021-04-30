@@ -51,6 +51,7 @@ router.get("/companynames", async (req, res) => {
       } else {
         console.error(`router /companynames catch() ${err}`);
         res.status(500).send({ error: err.message });
+        break;
       }
     }
   }
@@ -71,6 +72,7 @@ router.get("/reports/", async (req, res) => {
       } else {
         console.error(`router /reports/ catch() ${err}`);
         res.status(500).send({ error: err.message });
+        break;
       }
     }
   }
@@ -97,6 +99,7 @@ router.get("/reports/:company", async (req, res) => {
       } else {
         console.error(`router /reports/:company catch() ${err}`);
         res.status(500).send({ error: err.message });
+        break;
       }
     }
   }

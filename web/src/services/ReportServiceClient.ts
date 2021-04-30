@@ -12,21 +12,30 @@ class ReportServiceClient {
   async getCompanies() {
     let url = `${BACKEND_URL}companynames`;
     let res = await axios.get(url);
-    let data: string[] = res.data;
+    let data: { data: string[]; isDemo: boolean } = {
+      data: res.data.data,
+      isDemo: res.data.isDemo,
+    };
     return data;
   }
 
   async getAllReports() {
     let url = `${BACKEND_URL}reports`;
     let res = await axios.get(url);
-    let data: CompanyReportDictionary = res.data;
+    let data: { data: CompanyReportDictionary; isDemo: boolean } = {
+      data: res.data.data,
+      isDemo: res.data.isDemo,
+    };
     return data;
   }
 
   async getReports(companyName: string) {
     let url = `${BACKEND_URL}reports/${companyName}`;
     let res = await axios.get(url);
-    let data: CompanyReport = res.data;
+    let data: { data: CompanyReport; isDemo: boolean } = {
+      data: res.data.data,
+      isDemo: res.data.isDemo,
+    };
     return data;
   }
 }

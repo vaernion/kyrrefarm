@@ -7,6 +7,7 @@ export enum Actions {
   SET_FAVORITE_COMPANY = "SET_FAVORITE_COMPANY",
   SET_COMPANIES = "SET_COMPANIES",
   SET_REPORTS = "SET_REPORTS",
+  SET_IS_DEMO = "SET_IS_DEMO",
   ERROR_FOUND = "ERROR_FOUND",
 }
 
@@ -29,6 +30,11 @@ type SetReports = {
   payload: CompanyReportDictionary;
 };
 
+type SetIsDemo = {
+  type: Actions.SET_IS_DEMO;
+  payload: boolean;
+};
+
 type ErrorFound = {
   type: Actions.ERROR_FOUND;
   payload: ErrorWithDate;
@@ -39,4 +45,5 @@ export type StoreAction =
   | SetFavoriteCompany
   | SetCompanies
   | SetReports
+  | SetIsDemo
   | ErrorFound;

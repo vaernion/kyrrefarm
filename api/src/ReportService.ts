@@ -1,4 +1,5 @@
 import { writeFileSync } from "fs";
+import _exampleReports from "./examples/exampleReports.json";
 import { companyNames } from "./names";
 import { sshExec } from "./sshExec";
 import { CompanyReport, CompanyReportDictionary } from "./types";
@@ -6,20 +7,32 @@ import { CompanyReport, CompanyReportDictionary } from "./types";
 const reportsPath = "http://dcsg2003.skyhigh.iik.ntnu.no:9001";
 const reportPrefix = "imt3003_report_last_100_";
 
+const exampleReports: CompanyReport[] = _exampleReports;
+
+const exampleReportsObj: CompanyReportDictionary = exampleReports.reduce(
+  (acc, cur) => ({ ...acc, [cur.account.user]: cur }),
+  {}
+);
+
 class ReportService {
   #reportsCache: CompanyReportDictionary = {};
   #reportsFetchedDate: Date | null = null;
   #reportsCacheMinutes: number = 5;
   #reportsAlwaysUseCache: boolean = false;
+  #reportsTemp: CompanyReport[] = [];
 
   #companiesCache: string[] = companyNames;
   #companiesFetchedDate: Date | null = null;
   #companiesCacheMinutes: number = 60;
   #companiesAlwaysUseCache: boolean = false;
 
-  #reportsArray: CompanyReport[] = [];
+  isDemo: boolean = true;
 
   async getCompanies() {
+    if (process.env.DEMO_DATA) {
+      return { data: companyNames, isDemo: true };
+    }
+
     if (
       !this.#companiesAlwaysUseCache &&
       (!this.#companiesFetchedDate ||
@@ -43,10 +56,14 @@ class ReportService {
         `${new Date().toJSON()} ReportService.getCompanies() cache hit`
       );
     }
-    return this.#companiesCache;
+    return { data: this.#companiesCache, isDemo: false };
   }
 
   async getAllReports() {
+    if (process.env.DEMO_DATA) {
+      return { data: exampleReportsObj, isDemo: true };
+    }
+
     if (
       !this.#reportsAlwaysUseCache &&
       (!this.#reportsFetchedDate ||
@@ -73,7 +90,7 @@ class ReportService {
       try {
         // parse to ensure valid syntax
         let reportsArray: CompanyReport[] = JSON.parse(reportsJson);
-        this.#reportsArray = reportsArray;
+        this.#reportsTemp = reportsArray;
       } catch (err) {
         if (err.message.includes("in JSON at position")) {
           console.time("ms to fix json formatting");
@@ -87,6 +104,8 @@ class ReportService {
             // fix trailing comma at end of array
             .split(",\n]")
             .join("]");
+          // other errors that are harder to fix also occur
+          // should switch to demo data
           console.timeEnd("ms to fix json formatting");
 
           if (process.env.NODE_ENV === "development") {
@@ -95,15 +114,13 @@ class ReportService {
             writeFileSync("all-reports-stderr.log", output.stderr);
           }
 
-          this.#reportsArray = JSON.parse(reportsJsonFixed);
+          this.#reportsTemp = JSON.parse(reportsJsonFixed);
         } else {
           throw err;
         }
       }
       // convert to a companyName->obj dictionary for easier lookups
-      let reportsObj: {
-        [key: string]: CompanyReport;
-      } = this.#reportsArray.reduce(
+      let reportsObj: CompanyReportDictionary = this.#reportsTemp.reduce(
         (acc, cur) => ({ ...acc, [cur.account.user]: cur }),
         {}
       );
@@ -118,10 +135,16 @@ class ReportService {
         `${new Date().toJSON()} ReportService.getAllReports() cache hit`
       );
     }
-    return this.#reportsCache;
+    return { data: this.#reportsCache, isDemo: false };
   }
 
   async getReports(companyName: string) {
+    if (process.env.DEMO_DATA) {
+      return exampleReportsObj.hasOwnProperty(companyName)
+        ? { data: exampleReportsObj[companyName], isDemo: true }
+        : null;
+    }
+
     if (
       !this.#reportsAlwaysUseCache &&
       (!this.#reportsFetchedDate ||
@@ -141,7 +164,7 @@ class ReportService {
       );
     }
     return this.#reportsCache.hasOwnProperty(companyName)
-      ? this.#reportsCache[companyName]
+      ? { data: this.#reportsCache[companyName], isDemo: false }
       : null;
   }
 }

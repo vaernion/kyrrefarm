@@ -25,6 +25,7 @@ React frontend to view stats from certain reports retrieved using the server.
 - SSH_HOST
 - SSH_USER
 - SSH_KEY
+- DEMO_DATA (truthy or falsy)
 
 ## Build
 

@@ -9,6 +9,7 @@ import {
   NotFound,
   Overview,
 } from "./components";
+import { DemoInfo } from "./components/DemoInfo";
 import { Store } from "./Store";
 
 type AppRoutes = {
@@ -44,6 +45,7 @@ export function App() {
     <Router>
       <Store>
         <Menu />
+        <DemoInfo />
         <Switch>
           {appRoutes.map((route) => (
             <Route key={route.path} path={route.path} exact={true}>
